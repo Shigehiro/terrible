@@ -3,6 +3,15 @@
 #
 #
 # instance the provider
+# use libvirt provider
+terraform {
+  required_providers {
+    libvirt = {
+      source = "dmacvicar/libvirt"
+    }
+  }
+}
+
 provider "libvirt" {
   uri = "{{ provider_uri }}"
 }
