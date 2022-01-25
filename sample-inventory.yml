@@ -1,0 +1,69 @@
+---
+
+all:
+  vars:
+  hosts:
+    terraform_node:
+      ansible_host: 127.0.0.1
+      ansible_connection: local  # ssh
+    hypervisor_1:
+      ansible_host: 127.0.0.1
+      ansible_connection: local
+  children:
+    deploy:
+      vars:
+        disk_source: "/storage/Qcow2/CentOS-Stream-GenericCloud-8-20210603.0.x86_64-40G.qcow2"
+        pool_name: default
+        ssh_password: root
+        ssh_port: 22
+        ssh_user: root
+        cloud_init: true
+        # ----
+        ##
+        # Default ssh public key location.
+        ssh_public_key_file: '~/.ssh/id_rsa.pub'
+        # ----
+        ##
+        # Default folders where to safe HCL files and the final state
+        base_deploy_path: "{{ lookup('env','HOME') }}"
+        state_save_file: "{{ ansible_inventory_sources[0] }}-state.tar.gz"
+      children:
+        server_group1:
+          vars:
+            cpu: 2 
+            memory: 2048
+          hosts:
+            host-vm-1:
+              os_family: RedHat
+              #cpu: 1
+              #memory: 1024
+              vm_autostart: false
+              hypervisor: hypervisor_1
+              #ansible_host: 192.168.124.155
+              network_interfaces:
+                iface_1:
+                  name: terraform-net
+                  type: nat
+                  ip: 192.168.124.155
+                  gw: 192.168.124.1
+                  dns:
+                    - 8.8.8.8
+                    - 1.1.1.1
+
+            host-vm-2:
+              os_family: RedHat
+              #cpu: 1
+              #memory: 1024
+              vm_autostart: false
+              hypervisor: hypervisor_1
+              #ansible_host: 192.168.124.155
+              network_interfaces:
+                iface_1:
+                  name: terraform-net
+                  type: nat
+                  ip: 192.168.124.156
+                  gw: 192.168.124.1
+                  dns:
+                    - 8.8.8.8
+                    - 1.1.1.1
+
