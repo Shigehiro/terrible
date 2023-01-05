@@ -40,9 +40,9 @@ resource "libvirt_domain" "domain_{{ inventory_hostname }}" {
 
   autostart = {% if vm_autostart %}true{% else %}false{% endif %}
 
-  #cpu = {
-  #  mode = "host-passthrough"
-  #}
+  cpu {
+    mode = "host-passthrough"
+  }
 
 
 {% if cloud_init is defined and cloud_init %}
